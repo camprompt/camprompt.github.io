@@ -42,3 +42,7 @@
 
 a.button[disabled] { pointer-events: none; opacity: 0.6; }
 
+
+/* Paper Fig. 1 at the top of the teaser. */
+.overview-figure { height: auto; margin: 0 0 0.5rem; }
+.overview-caption { margin-bottom: 2rem; text-align: justify; }

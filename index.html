@@ -72,6 +72,17 @@
 <section class="hero teaser">
   <div class="container is-max-desktop">
     <div class="hero-body">
+      <!-- Paper Fig. 1 (media_files/figs/overview_pexels.pdf, rendered at 2x) -->
+      <a href="./static/images/overview.jpg" title="Open full size">
+        <img src="./static/images/overview.jpg" class="figure overview-figure" width="1928" height="903"
+             alt="Overview of CamPrompt: instead of camera parameters, the user gives a plain-text camera instruction and CamPrompt re-shoots the source video along that trajectory.">
+      </a>
+      <p class="figure-caption overview-caption">
+        <b>Overview of <span class="dnerf">CamPrompt</span>.</b> Given a source video, its caption, and a simple user-provided
+        text instruction of camera movement, <span class="dnerf">CamPrompt</span> re-shoots the source video at a new camera
+        trajectory described by the text instruction. There is no need for complex control formats such as camera
+        parameters or flow maps.
+      </p>
       <div class="columns is-multiline">
         <div class="column is-half">
           <p class="prompt">&ldquo;Move up while tilting down, then zoom out.&rdquo;</p>
@@ -119,6 +130,55 @@
             CamPrompt represents a step toward more user-accessible and intuitive controlled video generation.
           </p>
         </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Complex trajectories -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">Complex Camera Trajectories from One Prompt</h2>
+    <p class="has-text-centered section-note">
+      Multi-step instructions are expanded by the LLM rewriter into dense camera prompts and 6-DoF extrinsics.
+      Each pair shows the source clip (left) and CamPrompt's output (right).
+    </p>
+    <div class="columns is-multiline">
+      <div class="column is-half">
+        <p class="prompt">&ldquo;Move backward, then move up.&rdquo;</p>
+        <video autoplay muted loop playsinline preload="metadata" class="pair-video"><source src="./static/videos/arb_lalaland__move_backward_then_move_up.mp4" type="video/mp4"></video>
+      </div>
+      <div class="column is-half">
+        <p class="prompt">&ldquo;Turn left, then turn back to the origin.&rdquo;</p>
+        <video autoplay muted loop playsinline preload="metadata" class="pair-video"><source src="./static/videos/arb_lalaland__turn_left_then_turn_back_to_the_origin.mp4" type="video/mp4"></video>
+      </div>
+      <div class="column is-half">
+        <p class="prompt">&ldquo;Move up while tilting down, then zoom in.&rdquo;</p>
+        <video autoplay muted loop playsinline preload="metadata" class="pair-video"><source src="./static/videos/arb_lalaland__move_up_while_tilting_down_then_zoom_in.mp4" type="video/mp4"></video>
+      </div>
+      <div class="column is-half">
+        <p class="prompt">&ldquo;Move up while tilting down, then move right while turning left.&rdquo;</p>
+        <video autoplay muted loop playsinline preload="metadata" class="pair-video"><source src="./static/videos/arb_lalaland__move_up_while_tilting_down_then_move_right_while_turning_left.mp4" type="video/mp4"></video>
+      </div>
+      <div class="column is-half">
+        <p class="prompt">&ldquo;Move left and forward while turning right, then move up and tilt down.&rdquo;</p>
+        <video autoplay muted loop playsinline preload="metadata" class="pair-video"><source src="./static/videos/arb_forrestgump__move_left_and_forward_while_turning_right_then_move_up_and_tilt_down.mp4" type="video/mp4"></video>
+      </div>
+      <div class="column is-half">
+        <p class="prompt">&ldquo;Move right and forward while turning left, then move up while tilting down.&rdquo;</p>
+        <video autoplay muted loop playsinline preload="metadata" class="pair-video"><source src="./static/videos/arb_forrestgump__move_right_and_forward_while_turning_left_then_move_up_while_tilting_down.mp4" type="video/mp4"></video>
+      </div>
+      <div class="column is-half">
+        <p class="prompt">&ldquo;Move left while turning right, then move all the way to the right while turning left.&rdquo;</p>
+        <video autoplay muted loop playsinline preload="metadata" class="pair-video"><source src="./static/videos/arb_forrestgump__move_left_while_turning_right_then_move_all_the_way_to_the_right_while_turning_left.mp4" type="video/mp4"></video>
+      </div>
+      <div class="column is-half">
+        <p class="prompt">&ldquo;Move up, right, and forward, then move left, down, and backward while turning right.&rdquo;</p>
+        <video autoplay muted loop playsinline preload="metadata" class="pair-video"><source src="./static/videos/arb_forrestgump__move_up_right_forward_then_move_left_down_backward_and_turning_right.mp4" type="video/mp4"></video>
+      </div>
+      <div class="column is-half is-offset-one-quarter">
+        <p class="prompt">&ldquo;Hold still.&rdquo;</p>
+        <video autoplay muted loop playsinline preload="metadata" class="pair-video"><source src="./static/videos/arb_titanic__hold_still.mp4" type="video/mp4"></video>
       </div>
     </div>
   </div>
@@ -173,55 +233,6 @@
       <div class="column is-half">
         <p class="prompt">&ldquo;Move right and forward while turning left.&rdquo;</p>
         <video autoplay muted loop playsinline preload="metadata" class="pair-video"><source src="./static/videos/preset10_arc_right.mp4" type="video/mp4"></video>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Complex trajectories -->
-<section class="section">
-  <div class="container is-max-desktop">
-    <h2 class="title is-3 has-text-centered">Complex Camera Trajectories from One Prompt</h2>
-    <p class="has-text-centered section-note">
-      Multi-step instructions are expanded by the LLM rewriter into dense camera prompts and 6-DoF extrinsics.
-      Each pair shows the source clip (left) and CamPrompt's output (right).
-    </p>
-    <div class="columns is-multiline">
-      <div class="column is-half">
-        <p class="prompt">&ldquo;Move backward, then move up.&rdquo;</p>
-        <video autoplay muted loop playsinline preload="metadata" class="pair-video"><source src="./static/videos/arb_lalaland__move_backward_then_move_up.mp4" type="video/mp4"></video>
-      </div>
-      <div class="column is-half">
-        <p class="prompt">&ldquo;Turn left, then turn back to the origin.&rdquo;</p>
-        <video autoplay muted loop playsinline preload="metadata" class="pair-video"><source src="./static/videos/arb_lalaland__turn_left_then_turn_back_to_the_origin.mp4" type="video/mp4"></video>
-      </div>
-      <div class="column is-half">
-        <p class="prompt">&ldquo;Move up while tilting down, then zoom in.&rdquo;</p>
-        <video autoplay muted loop playsinline preload="metadata" class="pair-video"><source src="./static/videos/arb_lalaland__move_up_while_tilting_down_then_zoom_in.mp4" type="video/mp4"></video>
-      </div>
-      <div class="column is-half">
-        <p class="prompt">&ldquo;Move up while tilting down, then move right while turning left.&rdquo;</p>
-        <video autoplay muted loop playsinline preload="metadata" class="pair-video"><source src="./static/videos/arb_lalaland__move_up_while_tilting_down_then_move_right_while_turning_left.mp4" type="video/mp4"></video>
-      </div>
-      <div class="column is-half">
-        <p class="prompt">&ldquo;Move left and forward while turning right, then move up and tilt down.&rdquo;</p>
-        <video autoplay muted loop playsinline preload="metadata" class="pair-video"><source src="./static/videos/arb_forrestgump__move_left_and_forward_while_turning_right_then_move_up_and_tilt_down.mp4" type="video/mp4"></video>
-      </div>
-      <div class="column is-half">
-        <p class="prompt">&ldquo;Move right and forward while turning left, then move up while tilting down.&rdquo;</p>
-        <video autoplay muted loop playsinline preload="metadata" class="pair-video"><source src="./static/videos/arb_forrestgump__move_right_and_forward_while_turning_left_then_move_up_while_tilting_down.mp4" type="video/mp4"></video>
-      </div>
-      <div class="column is-half">
-        <p class="prompt">&ldquo;Move left while turning right, then move all the way to the right while turning left.&rdquo;</p>
-        <video autoplay muted loop playsinline preload="metadata" class="pair-video"><source src="./static/videos/arb_forrestgump__move_left_while_turning_right_then_move_all_the_way_to_the_right_while_turning_left.mp4" type="video/mp4"></video>
-      </div>
-      <div class="column is-half">
-        <p class="prompt">&ldquo;Move up, right, and forward, then move left, down, and backward while turning right.&rdquo;</p>
-        <video autoplay muted loop playsinline preload="metadata" class="pair-video"><source src="./static/videos/arb_forrestgump__move_up_right_forward_then_move_left_down_backward_and_turning_right.mp4" type="video/mp4"></video>
-      </div>
-      <div class="column is-half is-offset-one-quarter">
-        <p class="prompt">&ldquo;Hold still.&rdquo;</p>
-        <video autoplay muted loop playsinline preload="metadata" class="pair-video"><source src="./static/videos/arb_titanic__hold_still.mp4" type="video/mp4"></video>
       </div>
     </div>
   </div>
