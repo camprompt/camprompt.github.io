@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="CamPrompt: camera-controlled video-to-video generation from a single text prompt. WACV 2027.">
+  <meta name="keywords" content="CamPrompt, camera control, video generation, video-to-video, text prompt, MultiCamVideo">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CamPrompt: Camera-Controlled Video-to-Video Generation from Text Prompt</title>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="stylesheet" href="./static/css/camprompt.css">
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+</head>
+<body>
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-1 publication-title">CamPrompt: Camera-Controlled Video-to-Video Generation from Text Prompt</h1>
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">Xinhao Liu<sup>1</sup>,</span>
+            <span class="author-block">Kan Chen<sup>2</sup>,</span>
+            <span class="author-block">Yuan Zhong<sup>1</sup>,</span>
+            <span class="author-block">Pengchong Jin<sup>3</sup>,</span>
+            <span class="author-block">Yan Xu<sup>1</sup>,</span>
+            <span class="author-block">Zhuoyuan Chen<sup>4</sup>,</span>
+            <span class="author-block">Ting Yu<sup>1</sup></span>
+          </div>
+          <div class="is-size-5 publication-authors">
+            <span class="author-block"><sup>1</sup>Google</span>
+            <span class="author-block"><sup>2</sup>SpaceX Super Intelligence</span>
+            <span class="author-block"><sup>3</sup>Apple</span>
+            <span class="author-block"><sup>4</sup>Microsoft</span>
+          </div>
+          <div class="is-size-5 publication-venue has-text-centered">WACV 2027</div>
+
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <span class="link-block">
+                <a class="external-link button is-normal is-rounded is-dark" disabled title="Coming soon">
+                  <span class="icon"><i class="fas fa-file-pdf"></i></span>
+                  <span>Paper (coming soon)</span>
+                </a>
+              </span>
+              <span class="link-block">
+                <a href="#dataset" class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon"><i class="fas fa-database"></i></span>
+                  <span>Dataset</span>
+                </a>
+              </span>
+              <span class="link-block">
+                <a href="#BibTeX" class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon"><i class="fas fa-quote-right"></i></span>
+                  <span>BibTeX</span>
+                </a>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Teaser -->
+<section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body">
+      <div class="columns is-multiline">
+        <div class="column is-half">
+          <p class="prompt">&ldquo;Move up while tilting down, then zoom out.&rdquo;</p>
+          <video autoplay muted loop playsinline preload="auto" class="pair-video">
+            <source src="./static/videos/arb_lalaland__move_up_while_tilting_down_then_zoom_out.mp4" type="video/mp4">
+          </video>
+          <div class="pair-labels"><span>Source video</span><span>CamPrompt</span></div>
+        </div>
+        <div class="column is-half">
+          <p class="prompt">&ldquo;Zoom in, then zoom out.&rdquo;</p>
+          <video autoplay muted loop playsinline preload="auto" class="pair-video">
+            <source src="./static/videos/arb_scentofawomen__zoom_in_then_zoom_out.mp4" type="video/mp4">
+          </video>
+          <div class="pair-labels"><span>Source video</span><span>CamPrompt</span></div>
+        </div>
+      </div>
+      <h2 class="subtitle has-text-centered">
+        <span class="dnerf">CamPrompt</span> re-shoots an existing video along a new camera trajectory,
+        described in a single plain-text instruction.
+      </h2>
+    </div>
+  </div>
+</section>
+
+<!-- Abstract -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            Controlling camera motion is essential for video generation, as it offers creators a powerful
+            cinematic tool for shaping visual narratives. However, existing camera-controlled video generation
+            models rely on complex and opaque control formats that are inaccessible to everyday users. In this
+            work, we introduce CamPrompt, a video-to-video generation model that enables natural camera control
+            through a single text prompt. Given a source video, its caption, and a simple text instruction
+            describing the desired camera motion (e.g., &ldquo;Turn the camera to the right.&rdquo;), CamPrompt
+            re-shoots the video from a novel camera trajectory specified by the instruction. We annotate a high
+            quality multi-camera video dataset with natural language descriptions of camera movement for
+            training (<a href="#dataset">released below</a>), and design a novel dense prompt conditioning
+            strategy and a text&ndash;camera alignment module for effective control. Extensive experiments show
+            that CamPrompt attains strong visual quality and accurate camera control, with a 6.7% decrease in FVD
+            compared to the state-of-the-art approach while generalizing robustly across complex instructions.
+            CamPrompt represents a step toward more user-accessible and intuitive controlled video generation.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Results: the 10 preset trajectories (paper appendix Fig. "10 simple trajectories") -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">Basic Camera Trajectories</h2>
+    <p class="has-text-centered section-note">
+      The 10 preset trajectories used for quantitative evaluation, one example each.
+      Each pair shows the source video (left) and CamPrompt's output (right) for the camera prompt above it.
+      Source videos are from <a href="https://www.pexels.com/">Pexels</a>.
+    </p>
+    <div class="columns is-multiline">
+      <div class="column is-half">
+        <p class="prompt">&ldquo;Turn right.&rdquo;</p>
+        <video autoplay muted loop playsinline preload="metadata" class="pair-video"><source src="./static/videos/preset01_turn_right.mp4" type="video/mp4"></video>
+      </div>
+      <div class="column is-half">
+        <p class="prompt">&ldquo;Turn left.&rdquo;</p>
+        <video autoplay muted loop playsinline preload="metadata" class="pair-video"><source src="./static/videos/preset02_turn_left.mp4" type="video/mp4"></video>
+      </div>
+      <div class="column is-half">
+        <p class="prompt">&ldquo;Tilt upwards.&rdquo;</p>
+        <video autoplay muted loop playsinline preload="metadata" class="pair-video"><source src="./static/videos/preset03_tilt_up.mp4" type="video/mp4"></video>
+      </div>
+      <div class="column is-half">
+        <p class="prompt">&ldquo;Tilt downwards.&rdquo;</p>
+        <video autoplay muted loop playsinline preload="metadata" class="pair-video"><source src="./static/videos/preset04_tilt_down.mp4" type="video/mp4"></video>
+      </div>
+      <div class="column is-half">
+        <p class="prompt">&ldquo;Move forward.&rdquo;</p>
+        <video autoplay muted loop playsinline preload="metadata" class="pair-video"><source src="./static/videos/preset05_move_forward.mp4" type="video/mp4"></video>
+      </div>
+      <div class="column is-half">
+        <p class="prompt">&ldquo;Move backward.&rdquo;</p>
+        <video autoplay muted loop playsinline preload="metadata" class="pair-video"><source src="./static/videos/preset06_move_backward.mp4" type="video/mp4"></video>
+      </div>
+      <div class="column is-half">
+        <p class="prompt">&ldquo;Move up and tilt downwards.&rdquo;</p>
+        <video autoplay muted loop playsinline preload="metadata" class="pair-video"><source src="./static/videos/preset07_up_tilt_down.mp4" type="video/mp4"></video>
+      </div>
+      <div class="column is-half">
+        <p class="prompt">&ldquo;Move down and tilt upwards.&rdquo;</p>
+        <video autoplay muted loop playsinline preload="metadata" class="pair-video"><source src="./static/videos/preset08_down_tilt_up.mp4" type="video/mp4"></video>
+      </div>
+      <div class="column is-half">
+        <p class="prompt">&ldquo;Move left and forward while turning right.&rdquo;</p>
+        <video autoplay muted loop playsinline preload="metadata" class="pair-video"><source src="./static/videos/preset09_arc_left.mp4" type="video/mp4"></video>
+      </div>
+      <div class="column is-half">
+        <p class="prompt">&ldquo;Move right and forward while turning left.&rdquo;</p>
+        <video autoplay muted loop playsinline preload="metadata" class="pair-video"><source src="./static/videos/preset10_arc_right.mp4" type="video/mp4"></video>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Complex trajectories -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">Complex Camera Trajectories from One Prompt</h2>
+    <p class="has-text-centered section-note">
+      Multi-step instructions are expanded by the LLM rewriter into dense camera prompts and 6-DoF extrinsics.
+      Each pair shows the source clip (left) and CamPrompt's output (right).
+    </p>
+    <div class="columns is-multiline">
+      <div class="column is-half">
+        <p class="prompt">&ldquo;Move backward, then move up.&rdquo;</p>
+        <video autoplay muted loop playsinline preload="metadata" class="pair-video"><source src="./static/videos/arb_lalaland__move_backward_then_move_up.mp4" type="video/mp4"></video>
+      </div>
+      <div class="column is-half">
+        <p class="prompt">&ldquo;Turn left, then turn back to the origin.&rdquo;</p>
+        <video autoplay muted loop playsinline preload="metadata" class="pair-video"><source src="./static/videos/arb_lalaland__turn_left_then_turn_back_to_the_origin.mp4" type="video/mp4"></video>
+      </div>
+      <div class="column is-half">
+        <p class="prompt">&ldquo;Move up while tilting down, then zoom in.&rdquo;</p>
+        <video autoplay muted loop playsinline preload="metadata" class="pair-video"><source src="./static/videos/arb_lalaland__move_up_while_tilting_down_then_zoom_in.mp4" type="video/mp4"></video>
+      </div>
+      <div class="column is-half">
+        <p class="prompt">&ldquo;Move up while tilting down, then move right while turning left.&rdquo;</p>
+        <video autoplay muted loop playsinline preload="metadata" class="pair-video"><source src="./static/videos/arb_lalaland__move_up_while_tilting_down_then_move_right_while_turning_left.mp4" type="video/mp4"></video>
+      </div>
+      <div class="column is-half">
+        <p class="prompt">&ldquo;Move left and forward while turning right, then move up and tilt down.&rdquo;</p>
+        <video autoplay muted loop playsinline preload="metadata" class="pair-video"><source src="./static/videos/arb_forrestgump__move_left_and_forward_while_turning_right_then_move_up_and_tilt_down.mp4" type="video/mp4"></video>
+      </div>
+      <div class="column is-half">
+        <p class="prompt">&ldquo;Move right and forward while turning left, then move up while tilting down.&rdquo;</p>
+        <video autoplay muted loop playsinline preload="metadata" class="pair-video"><source src="./static/videos/arb_forrestgump__move_right_and_forward_while_turning_left_then_move_up_while_tilting_down.mp4" type="video/mp4"></video>
+      </div>
+      <div class="column is-half">
+        <p class="prompt">&ldquo;Move left while turning right, then move all the way to the right while turning left.&rdquo;</p>
+        <video autoplay muted loop playsinline preload="metadata" class="pair-video"><source src="./static/videos/arb_forrestgump__move_left_while_turning_right_then_move_all_the_way_to_the_right_while_turning_left.mp4" type="video/mp4"></video>
+      </div>
+      <div class="column is-half">
+        <p class="prompt">&ldquo;Move up, right, and forward, then move left, down, and backward while turning right.&rdquo;</p>
+        <video autoplay muted loop playsinline preload="metadata" class="pair-video"><source src="./static/videos/arb_forrestgump__move_up_right_forward_then_move_left_down_backward_and_turning_right.mp4" type="video/mp4"></video>
+      </div>
+      <div class="column is-half is-offset-one-quarter">
+        <p class="prompt">&ldquo;Hold still.&rdquo;</p>
+        <video autoplay muted loop playsinline preload="metadata" class="pair-video"><source src="./static/videos/arb_titanic__hold_still.mp4" type="video/mp4"></video>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Method -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3 has-text-centered">Method</h2>
+        <img src="./static/images/model_architecture.png" class="figure" alt="CamPrompt model architecture">
+        <div class="content has-text-justified">
+          <p>
+            CamPrompt builds on a Wan2.1 text-to-video diffusion transformer and conditions on the source video by
+            concatenating source and target video tokens along the frame dimension.
+          </p>
+          <ul>
+            <li><b>Dense camera prompts.</b> Instead of one global camera prompt, the model takes four dense
+              prompts, each describing the camera motion over one quarter of the video. At inference the user
+              still writes a single instruction; an LLM rewriter expands it into the dense format.</li>
+            <li><b>Dense Aggregated Temporal Attention (DATA).</b> Source and target tokens are split into four
+              temporal chunks, and the <i>i</i>-th chunk cross-attends only to the <i>i</i>-th camera prompt.</li>
+            <li><b>Simple 6-DoF camera extrinsics.</b> During training, the model also receives the trajectory as
+              six numbers per frame (roll, pitch, yaw, x, y, z). At inference, a second LLM rewriter produces
+              these values from the user's instruction.</li>
+            <li><b>Text&ndash;camera alignment.</b> Camera prompt embeddings are explicitly aligned with the
+              corresponding camera extrinsics so the text encoder better reflects camera-motion semantics.</li>
+          </ul>
+        </div>
+        <img src="./static/images/DATA.png" class="figure figure-narrow" alt="Dense Aggregated Temporal Attention">
+        <p class="has-text-centered figure-caption">Dense Aggregated Temporal Attention: each temporal chunk of
+          the source and target video attends to its own camera prompt.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Dataset -->
+<section class="section" id="dataset">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">Dataset: Camera-Motion Text for MultiCamVideo</h2>
+    <div class="content has-text-justified">
+      <p>
+        We release the text annotations used to train CamPrompt: a <b>caption</b> and <b>four dense camera
+        prompts</b> for every training video of the
+        <a href="https://huggingface.co/datasets/KlingTeam/MultiCamVideo-Dataset">MultiCamVideo dataset</a>
+        from <a href="https://arxiv.org/abs/2503.11647">ReCamMaster</a> (13.6K Unreal Engine 5 scenes, each
+        rendered by 10 cameras). Each camera trajectory is split into four consecutive segments, the relative
+        6-DoF motion of each segment is computed from the dataset's camera extrinsics, and Gemini 2.5 Flash turns it
+        into a short instruction; captions are also generated with Gemini 2.5 Flash. The annotations are keyed by video path, so they join directly to the original
+        dataset. <b>Videos are not included</b>; download them from the original dataset.
+      </p>
+    </div>
+
+    <table class="table is-fullwidth is-striped dataset-table">
+      <thead><tr><th>File</th><th>Rows</th><th>Columns</th></tr></thead>
+      <tbody>
+        <tr><td><code>captions.csv</code></td><td>136,000</td><td><code>file_name</code>, <code>caption</code></td></tr>
+        <tr><td><code>camera_prompts.csv</code></td><td>136,000</td><td><code>file_name</code>, <code>segment_1</code> &hellip; <code>segment_4</code></td></tr>
+      </tbody>
+    </table>
+
+    <h3 class="title is-5">Example: four cameras of one scene</h3>
+    <div class="columns is-multiline dataset-viewer">
+      <div class="column is-one-quarter">
+        <video autoplay muted loop playsinline preload="metadata"><source src="./static/videos/multicam_scene26_cam02.mp4" type="video/mp4"></video>
+        <ol class="segments">
+          <li>Tilt downwards.</li><li>Tilt downwards.</li><li>Tilt downwards.</li><li>Tilt downwards.</li>
+        </ol>
+      </div>
+      <div class="column is-one-quarter">
+        <video autoplay muted loop playsinline preload="metadata"><source src="./static/videos/multicam_scene26_cam04.mp4" type="video/mp4"></video>
+        <ol class="segments">
+          <li>Move downward and forward while tilting upwards.</li>
+          <li>Move downward and forward while tilting upwards.</li>
+          <li>Move downward while tilting upwards.</li>
+          <li>Move downward while tilting upwards.</li>
+        </ol>
+      </div>
+      <div class="column is-one-quarter">
+        <video autoplay muted loop playsinline preload="metadata"><source src="./static/videos/multicam_scene26_cam06.mp4" type="video/mp4"></video>
+        <ol class="segments">
+          <li>Arc left and forward while turning slightly right.</li>
+          <li>Arc left and forward while turning right and rolling slightly clockwise.</li>
+          <li>Arc left and forward while turning sharply right and rolling clockwise.</li>
+          <li>Turn extremely right and roll heavily clockwise while moving sharply left.</li>
+        </ol>
+      </div>
+      <div class="column is-one-quarter">
+        <video autoplay muted loop playsinline preload="metadata"><source src="./static/videos/multicam_scene26_cam09.mp4" type="video/mp4"></video>
+        <ol class="segments">
+          <li>Move left, forward, and slightly down while rolling clockwise, tilting up, and turning right.</li>
+          <li>Move left, forward, and down while rolling clockwise, tilting up, and turning right.</li>
+          <li>Move right, up, and forward while rolling counter-clockwise, tilting down, and turning left.</li>
+          <li>Move right, up, and forward while rolling counter-clockwise, tilting down, and turning left.</li>
+        </ol>
+      </div>
+    </div>
+    <div class="content caption-example">
+      <p><b>Caption</b> (<code>train/f35_aperture2.4/scene26/videos/cam02.mp4</code>):
+        &ldquo;The video shows a man wearing a yellow button-down shirt and dark pants standing on a weathered
+        wooden dock above turquoise water. He begins in a standing position and then crouches while extending
+        one arm out to the side, maintaining a serious expression. In the background, there is an island with
+        &hellip;&rdquo;</p>
+      <p class="is-size-7">Videos: MultiCamVideo dataset (Apache-2.0), <code>train/f35_aperture2.4/scene26</code>,
+        cameras 02, 04, 06, 09.</p>
+    </div>
+
+    <div class="has-text-centered download-block">
+      <a href="./data/camprompt_annotations_v1.zip" class="button is-medium is-rounded is-dark" download>
+        <span class="icon"><i class="fas fa-download"></i></span>
+        <span>Download annotations (ZIP, 16.5&nbsp;MB)</span>
+      </a>
+      <a href="./data/README.html" class="button is-medium is-rounded is-light">
+        <span class="icon"><i class="fas fa-file-alt"></i></span>
+        <span>Dataset card</span>
+      </a>
+      <p class="is-size-7 checksum">SHA-256 checksums: <a href="./data/SHA256SUMS">SHA256SUMS</a></p>
+    </div>
+
+    <div class="content">
+<pre><code>import pandas as pd
+
+captions = pd.read_csv("captions.csv")
+prompts = pd.read_csv("camera_prompts.csv")
+annotations = captions.merge(prompts, on="file_name")
+# video: &lt;MultiCamVideo-Dataset root&gt;/&lt;file_name&gt;</code></pre>
+      <p>
+        <b>License.</b> The annotations are released under
+        <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. The MultiCamVideo videos and camera
+        data are not part of this release and remain under their original
+        <a href="https://huggingface.co/datasets/KlingTeam/MultiCamVideo-Dataset">Apache-2.0 license</a>.
+        All annotations are machine-generated and may contain errors. If you use them, please also cite
+        ReCamMaster.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title">BibTeX</h2>
+    <pre><code>@inproceedings{liu2027camprompt,
+  title     = {CamPrompt: Camera-Controlled Video-to-Video Generation from Text Prompt},
+  author    = {Liu, Xinhao and Chen, Kan and Zhong, Yuan and Jin, Pengchong and
+               Xu, Yan and Chen, Zhuoyuan and Yu, Ting},
+  booktitle = {Proceedings of the IEEE/CVF Winter Conference on Applications of Computer Vision (WACV)},
+  year      = {2027}
+}</code></pre>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content has-text-centered is-size-7">
+          <p>
+            Basic-motion source videos: <a href="https://www.pexels.com/license/">Pexels</a>.
+            Complex-trajectory source clips are from the films <i>La La Land</i>, <i>Forrest Gump</i>,
+            <i>Scent of a Woman</i> and <i>Titanic</i>, &copy; their respective owners, shown for research
+            illustration only.
+            Dataset example videos: <a href="https://huggingface.co/datasets/KlingTeam/MultiCamVideo-Dataset">MultiCamVideo</a> (Apache-2.0).
+          </p>
+          <p>
+            Website template borrowed from <a href="https://github.com/nerfies/nerfies.github.io">Nerfies</a>,
+            licensed under <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>.
+          </p>
+          <p>This is not an officially supported Google product.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

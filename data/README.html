@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CamPrompt Annotations for the MultiCamVideo Dataset (v1.0)</title>
+<style>
+body { font-family: -apple-system, 'Noto Sans', Helvetica, Arial, sans-serif; max-width: 860px; margin: 2rem auto; padding: 0 1rem; line-height: 1.55; color: #24292f; }
+pre { background: #f6f8fa; padding: 0.9rem; overflow-x: auto; border-radius: 6px; }
+code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 0.9em; }
+table { border-collapse: collapse; } th, td { border: 1px solid #d0d7de; padding: 0.35rem 0.7rem; }
+a { color: #0969da; }
+</style></head><body>
+<p><a href="../index.html#dataset">&larr; Back to the CamPrompt project page</a></p>
+<div class="markdown-heading"><h1 class="heading-element">CamPrompt Annotations for the MultiCamVideo Dataset (v1.0)</h1><a id="user-content-camprompt-annotations-for-the-multicamvideo-dataset-v10" class="anchor" aria-label="Permalink: CamPrompt Annotations for the MultiCamVideo Dataset (v1.0)" href="#camprompt-annotations-for-the-multicamvideo-dataset-v10"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<p>Text annotations released with the WACV 2027 paper
+<strong>CamPrompt: Camera-Controlled Video-to-Video Generation from Text Prompt</strong>.</p>
+<p>These files add <strong>natural-language video captions</strong> and <strong>dense camera-motion
+prompts</strong> to every training video of the
+<a href="https://huggingface.co/datasets/KlingTeam/MultiCamVideo-Dataset" rel="nofollow">MultiCamVideo dataset</a>
+introduced by <a href="https://arxiv.org/abs/2503.11647" rel="nofollow">ReCamMaster</a>. They are the
+annotations used to train CamPrompt.</p>
+<p><strong>No videos are included.</strong> Download the videos and camera extrinsics from the
+original dataset; the annotations join to it by file path.</p>
+<div class="markdown-heading"><h2 class="heading-element">Contents</h2><a id="user-content-contents" class="anchor" aria-label="Permalink: Contents" href="#contents"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Rows</th>
+<th>Columns</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>captions.csv</code></td>
+<td>136,000</td>
+<td>
+<code>file_name</code>, <code>caption</code>
+</td>
+</tr>
+<tr>
+<td><code>camera_prompts.csv</code></td>
+<td>136,000</td>
+<td>
+<code>file_name</code>, <code>segment_1</code>, <code>segment_2</code>, <code>segment_3</code>, <code>segment_4</code>
+</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>
+<strong><code>file_name</code></strong> is the video path relative to the root of the MultiCamVideo
+dataset, e.g. <code>train/f18_aperture10/scene1/videos/cam01.mp4</code>. Both files
+cover exactly the same 136,000 videos: 4 camera settings × 3,400 scenes × 10
+cameras (the full <code>train</code> split). The <code>val</code> split is not annotated.</li>
+<li>
+<strong><code>caption</code></strong> is a paragraph describing the scene, subjects and action of the
+video (median 82 words).</li>
+<li>
+<strong><code>segment_1</code> … <code>segment_4</code></strong> describe the camera motion during four
+consecutive segments (quarters) of the 81-frame clip, in the camera's own
+frame of reference (median 7 words each), e.g. <code>Move left while pushing in and turning right.</code>
+</li>
+</ul>
+<p>Example rows:</p>
+<pre><code>file_name,segment_1,segment_2,segment_3,segment_4
+train/f35_aperture2.4/scene26/videos/cam02.mp4,Tilt downwards.,Tilt downwards.,Tilt downwards.,Tilt downwards.
+train/f35_aperture2.4/scene26/videos/cam04.mp4,Move downward and forward while tilting upwards.,Move downward and forward while tilting upwards.,Move downward while tilting upwards.,Move downward while tilting upwards.
+</code></pre>
+<div class="markdown-heading"><h2 class="heading-element">Usage</h2><a id="user-content-usage" class="anchor" aria-label="Permalink: Usage" href="#usage"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<div class="highlight highlight-source-python"><pre><span class="pl-k">import</span> <span class="pl-s1">pandas</span> <span class="pl-k">as</span> <span class="pl-s1">pd</span>
+
+<span class="pl-s1">captions</span> <span class="pl-c1">=</span> <span class="pl-s1">pd</span>.<span class="pl-c1">read_csv</span>(<span class="pl-s">"captions.csv"</span>)
+<span class="pl-s1">prompts</span> <span class="pl-c1">=</span> <span class="pl-s1">pd</span>.<span class="pl-c1">read_csv</span>(<span class="pl-s">"camera_prompts.csv"</span>)
+<span class="pl-s1">annotations</span> <span class="pl-c1">=</span> <span class="pl-s1">captions</span>.<span class="pl-c1">merge</span>(<span class="pl-s1">prompts</span>, <span class="pl-s1">on</span><span class="pl-c1">=</span><span class="pl-s">"file_name"</span>)
+
+<span class="pl-c"># Path to the video inside your copy of MultiCamVideo-Dataset:</span>
+<span class="pl-c">#   &lt;MultiCamVideo-Dataset root&gt;/&lt;file_name&gt;</span></pre></div>
+<div class="markdown-heading"><h2 class="heading-element">How the annotations were made</h2><a id="user-content-how-the-annotations-were-made" class="anchor" aria-label="Permalink: How the annotations were made" href="#how-the-annotations-were-made"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<ul>
+<li>
+<strong>Captions</strong>: each video was captioned automatically with Gemini 2.5 Flash.</li>
+<li>
+<strong>Camera prompts</strong>: each camera trajectory (from the dataset's
+<code>camera_extrinsics.json</code>) was split into 4 consecutive chunks. For each chunk
+we computed the relative 6-DoF camera motion (translation and Euler angles)
+and used Gemini 2.5 Flash to describe that motion in a short natural-language
+instruction. See Sec. 3 and Appendix "Details of Training Data" of the paper.</li>
+</ul>
+<p>All annotations are machine-generated.</p>
+<div class="markdown-heading"><h2 class="heading-element">Known limitations</h2><a id="user-content-known-limitations" class="anchor" aria-label="Permalink: Known limitations" href="#known-limitations"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<ul>
+<li>Automatically generated text can contain errors, including hallucinated
+details in captions and imprecise motion descriptions.</li>
+<li>49 source videos in MultiCamVideo are entirely black; their captions say so
+(e.g. "The video is a black screen.").</li>
+<li>Segments split each clip uniformly in time; a motion change inside a segment
+is summarized in one phrase.</li>
+</ul>
+<div class="markdown-heading"><h2 class="heading-element">License</h2><a id="user-content-license" class="anchor" aria-label="Permalink: License" href="#license"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<p>The annotations in this release are licensed under the
+<a href="https://creativecommons.org/licenses/by/4.0/" rel="nofollow">Creative Commons Attribution 4.0 International License (CC BY 4.0)</a>
+(see <code>LICENSE</code>). The MultiCamVideo videos and camera data are <strong>not</strong> part of
+this release and remain under their own license (Apache-2.0, see the
+<a href="https://huggingface.co/datasets/KlingTeam/MultiCamVideo-Dataset" rel="nofollow">original dataset</a>).</p>
+<div class="markdown-heading"><h2 class="heading-element">Citation</h2><a id="user-content-citation" class="anchor" aria-label="Permalink: Citation" href="#citation"><span aria-hidden="true" class="octicon octicon-link"></span></a></div>
+<p>If you use these annotations, please cite CamPrompt and ReCamMaster:</p>
+<div class="highlight highlight-text-bibtex"><pre><span class="pl-k">@inproceedings</span>{<span class="pl-en">liu2027camprompt</span>,
+  <span class="pl-s">title</span>     = <span class="pl-s"><span class="pl-pds">{</span>CamPrompt: Camera-Controlled Video-to-Video Generation from Text Prompt<span class="pl-pds">}</span></span>,
+  <span class="pl-s">author</span>    = <span class="pl-s"><span class="pl-pds">{</span>Liu, Xinhao and Chen, Kan and Zhong, Yuan and Jin, Pengchong and Xu, Yan and Chen, Zhuoyuan and Yu, Ting<span class="pl-pds">}</span></span>,
+  <span class="pl-s">booktitle</span> = <span class="pl-s"><span class="pl-pds">{</span>Proceedings of the IEEE/CVF Winter Conference on Applications of Computer Vision (WACV)<span class="pl-pds">}</span></span>,
+  <span class="pl-s">year</span>      = <span class="pl-s"><span class="pl-pds">{</span>2027<span class="pl-pds">}</span></span>
+}
+
+<span class="pl-k">@misc</span>{<span class="pl-en">bai2025recammaster</span>,
+  <span class="pl-s">title</span>         = <span class="pl-s"><span class="pl-pds">{</span>ReCamMaster: Camera-Controlled Generative Rendering from A Single Video<span class="pl-pds">}</span></span>,
+  <span class="pl-s">author</span>        = <span class="pl-s"><span class="pl-pds">{</span>Jianhong Bai and Menghan Xia and Xiao Fu and Xintao Wang and Lianrui Mu and Jinwen Cao and Zuozhu Liu and Haoji Hu and Xiang Bai and Pengfei Wan and Di Zhang<span class="pl-pds">}</span></span>,
+  <span class="pl-s">year</span>          = <span class="pl-s"><span class="pl-pds">{</span>2025<span class="pl-pds">}</span></span>,
+  <span class="pl-s">eprint</span>        = <span class="pl-s"><span class="pl-pds">{</span>2503.11647<span class="pl-pds">}</span></span>,
+  <span class="pl-s">archivePrefix</span> = <span class="pl-s"><span class="pl-pds">{</span>arXiv<span class="pl-pds">}</span></span>,
+  <span class="pl-s">primaryClass</span>  = <span class="pl-s"><span class="pl-pds">{</span>cs.CV<span class="pl-pds">}</span></span>
+}</pre></div>
+<p><em>This is not an officially supported Google product.</em></p>
+
+</body></html>

@@ -1,0 +1,44 @@
+/* CamPrompt page additions on top of the Nerfies template styles. */
+.publication-venue { margin: 0.4rem auto 0; font-weight: 600; color: #4a4a4a; }
+
+.prompt {
+  font-family: 'Google Sans', sans-serif;
+  font-size: 1.05rem;
+  margin-bottom: 0.35rem;
+  text-align: center;
+}
+
+.pair-video { width: 100%; border-radius: 6px; display: block; }
+
+.pair-labels {
+  display: flex;
+  justify-content: space-around;
+  font-size: 0.85rem;
+  color: #7a7a7a;
+  margin-top: 0.2rem;
+}
+
+.section-note { margin-bottom: 1.5rem; color: #4a4a4a; }
+
+.figure { width: 100%; margin: 1rem 0 1.5rem; }
+.figure-narrow { max-width: 820px; display: block; margin-left: auto; margin-right: auto; }
+.figure-caption { font-size: 0.9rem; color: #4a4a4a; }
+
+.dataset-table { margin: 1.5rem 0 2rem; }
+
+.dataset-viewer video { width: 100%; border-radius: 6px; display: block; }
+.dataset-viewer .segments {
+  font-size: 0.8rem;
+  margin: 0.5rem 0 0 1.2rem;
+  line-height: 1.35;
+}
+.dataset-viewer .segments li { margin-bottom: 0.2rem; }
+
+.caption-example { margin-top: 1rem; }
+
+.download-block { margin: 2rem 0 1.5rem; }
+.download-block .button { margin: 0.3rem; }
+.checksum { margin-top: 0.5rem; }
+
+a.button[disabled] { pointer-events: none; opacity: 0.6; }
+
