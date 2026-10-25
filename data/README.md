@@ -1,4 +1,4 @@
-# CamPrompt Annotations for the MultiCamVideo Dataset (v1.0)
+# CamPrompt Annotations for the MultiCamVideo Dataset
 
 Text annotations released with the WACV 2027 paper
 **CamPrompt: Camera-Controlled Video-to-Video Generation from Text Prompt**.
@@ -6,8 +6,10 @@ Text annotations released with the WACV 2027 paper
 These files add **natural-language video captions** and **dense camera-motion
 prompts** to every training video of the
 [MultiCamVideo dataset](https://huggingface.co/datasets/KlingTeam/MultiCamVideo-Dataset)
-introduced by [ReCamMaster](https://arxiv.org/abs/2503.11647). They are the
-annotations used to train CamPrompt.
+introduced by [ReCamMaster](https://arxiv.org/abs/2503.11647). The captions and
+dense camera prompts are the annotations used to train CamPrompt. We also
+release an alternative **single camera prompt per video**, which was **not used
+for training**.
 
 **No videos are included.** Download the videos and camera extrinsics from the
 original dataset; the annotations join to it by file path.
@@ -17,18 +19,25 @@ original dataset; the annotations join to it by file path.
 | File | Rows | Columns |
 |---|---|---|
 | `captions.csv` | 136,000 | `file_name`, `caption` |
-| `camera_prompts.csv` | 136,000 | `file_name`, `segment_1`, `segment_2`, `segment_3`, `segment_4` |
+| `camera_prompts_dense.csv` | 136,000 | `file_name`, `segment_1`, `segment_2`, `segment_3`, `segment_4` |
+| `camera_prompts_single.csv` (not used for training) | 136,000 | `file_name`, `camera_prompt` |
 
 * **`file_name`** is the video path relative to the root of the MultiCamVideo
-  dataset, e.g. `train/f18_aperture10/scene1/videos/cam01.mp4`. Both files
+  dataset, e.g. `train/f18_aperture10/scene1/videos/cam01.mp4`. All files
   cover exactly the same 136,000 videos: 4 camera settings × 3,400 scenes × 10
   cameras (the full `train` split). The `val` split is not annotated.
 * **`caption`** is a paragraph describing the scene, subjects and action of the
   video (median 82 words).
-* **`segment_1` … `segment_4`** describe the camera motion during four
+* **`segment_1` … `segment_4`** (in `camera_prompts_dense.csv`) describe the camera motion during four
   consecutive segments (quarters) of the 81-frame clip, in the camera's own
   frame of reference (median 7 words each), e.g. `Move left while pushing in
   and turning right.`
+* **`camera_prompt`** (in `camera_prompts_single.csv`) describes the camera
+  motion of the whole clip in a single instruction (median 9 words; complex
+  trajectories can take a few sentences, up to 50 words), e.g. `Move the camera
+  left and slightly forward while turning to the right.` **CamPrompt was not
+  trained on these prompts**; they are provided for users who want one prompt
+  per video instead of four.
 
 Example rows:
 
@@ -38,14 +47,24 @@ train/f35_aperture2.4/scene26/videos/cam02.mp4,Tilt downwards.,Tilt downwards.,T
 train/f35_aperture2.4/scene26/videos/cam04.mp4,Move downward and forward while tilting upwards.,Move downward and forward while tilting upwards.,Move downward while tilting upwards.,Move downward while tilting upwards.
 ```
 
+```
+file_name,camera_prompt
+train/f35_aperture2.4/scene26/videos/cam02.mp4,Tilt the camera downwards.
+train/f35_aperture2.4/scene26/videos/cam04.mp4,Move the camera downward and slightly forward while tilting it upwards.
+```
+
 ## Usage
 
 ```python
 import pandas as pd
 
 captions = pd.read_csv("captions.csv")
-prompts = pd.read_csv("camera_prompts.csv")
+prompts = pd.read_csv("camera_prompts_dense.csv")
 annotations = captions.merge(prompts, on="file_name")
+
+# Optional: one camera prompt per video (not used to train CamPrompt).
+single = pd.read_csv("camera_prompts_single.csv")
+annotations = annotations.merge(single, on="file_name")
 
 # Path to the video inside your copy of MultiCamVideo-Dataset:
 #   <MultiCamVideo-Dataset root>/<file_name>
@@ -59,8 +78,10 @@ annotations = captions.merge(prompts, on="file_name")
   we computed the relative 6-DoF camera motion (translation and Euler angles)
   and used Gemini 2.5 Flash to describe that motion in a short natural-language
   instruction. See Sec. 3 and Appendix "Details of Training Data" of the paper.
+* **Single camera prompts** (not used for training): Gemini 2.5 Flash
+  summarized the camera motion of the whole trajectory in one instruction.
 
-All annotations are machine-generated.
+All annotations are machine-generated with Gemini 2.5 Flash.
 
 ## Known limitations
 
@@ -70,6 +91,8 @@ All annotations are machine-generated.
   (e.g. "The video is a black screen.").
 * Segments split each clip uniformly in time; a motion change inside a segment
   is summarized in one phrase.
+* A single camera prompt summarizes the whole clip and can leave out motion
+  that the segment prompts mention (e.g. a roll).
 
 ## License
 

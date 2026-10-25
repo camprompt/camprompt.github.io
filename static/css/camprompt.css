@@ -46,3 +46,6 @@ a.button[disabled] { pointer-events: none; opacity: 0.6; }
 /* Paper Fig. 1 at the top of the teaser. */
 .overview-figure { height: auto; margin: 0 0 0.5rem; }
 .overview-caption { margin-bottom: 2rem; text-align: justify; }
+
+/* Single camera prompt (not used for training) under each dataset example. */
+.dataset-viewer .single-prompt { font-size: 0.8rem; margin-top: 0.4rem; color: #4a4a4a; border-top: 1px solid #eee; padding-top: 0.35rem; }

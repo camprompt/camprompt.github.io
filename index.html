@@ -286,13 +286,19 @@
         into a short instruction; captions are also generated with Gemini 2.5 Flash. The annotations are keyed by video path, so they join directly to the original
         dataset. <b>Videos are not included</b>; download them from the original dataset.
       </p>
+      <p>
+        We also release a <b>single camera prompt</b> per video, which summarizes the whole trajectory in one
+        instruction. <b>It was not used to train CamPrompt</b>; we provide it for anyone who prefers one prompt per
+        video over four.
+      </p>
     </div>
 
     <table class="table is-fullwidth is-striped dataset-table">
       <thead><tr><th>File</th><th>Rows</th><th>Columns</th></tr></thead>
       <tbody>
         <tr><td><code>captions.csv</code></td><td>136,000</td><td><code>file_name</code>, <code>caption</code></td></tr>
-        <tr><td><code>camera_prompts.csv</code></td><td>136,000</td><td><code>file_name</code>, <code>segment_1</code> &hellip; <code>segment_4</code></td></tr>
+        <tr><td><code>camera_prompts_dense.csv</code></td><td>136,000</td><td><code>file_name</code>, <code>segment_1</code> &hellip; <code>segment_4</code></td></tr>
+        <tr><td><code>camera_prompts_single.csv</code> <span class="tag is-light">not used for training</span></td><td>136,000</td><td><code>file_name</code>, <code>camera_prompt</code></td></tr>
       </tbody>
     </table>
 
@@ -303,6 +309,7 @@
         <ol class="segments">
           <li>Tilt downwards.</li><li>Tilt downwards.</li><li>Tilt downwards.</li><li>Tilt downwards.</li>
         </ol>
+        <p class="single-prompt"><i>Single prompt:</i> &ldquo;Tilt the camera downwards.&rdquo;</p>
       </div>
       <div class="column is-one-quarter">
         <video autoplay muted loop playsinline preload="metadata"><source src="./static/videos/multicam_scene26_cam04.mp4" type="video/mp4"></video>
@@ -312,6 +319,7 @@
           <li>Move downward while tilting upwards.</li>
           <li>Move downward while tilting upwards.</li>
         </ol>
+        <p class="single-prompt"><i>Single prompt:</i> &ldquo;Move the camera downward and slightly forward while tilting it upwards.&rdquo;</p>
       </div>
       <div class="column is-one-quarter">
         <video autoplay muted loop playsinline preload="metadata"><source src="./static/videos/multicam_scene26_cam06.mp4" type="video/mp4"></video>
@@ -321,6 +329,7 @@
           <li>Arc left and forward while turning sharply right and rolling clockwise.</li>
           <li>Turn extremely right and roll heavily clockwise while moving sharply left.</li>
         </ol>
+        <p class="single-prompt"><i>Single prompt:</i> &ldquo;Move left and slightly forward while rolling clockwise and turning right.&rdquo;</p>
       </div>
       <div class="column is-one-quarter">
         <video autoplay muted loop playsinline preload="metadata"><source src="./static/videos/multicam_scene26_cam09.mp4" type="video/mp4"></video>
@@ -330,6 +339,7 @@
           <li>Move right, up, and forward while rolling counter-clockwise, tilting down, and turning left.</li>
           <li>Move right, up, and forward while rolling counter-clockwise, tilting down, and turning left.</li>
         </ol>
+        <p class="single-prompt"><i>Single prompt:</i> &ldquo;Arc left and down while moving forward and turning right. Then arc right and up, continuing forward and turning back left.&rdquo;</p>
       </div>
     </div>
     <div class="content caption-example">
@@ -338,14 +348,15 @@
         wooden dock above turquoise water. He begins in a standing position and then crouches while extending
         one arm out to the side, maintaining a serious expression. In the background, there is an island with
         &hellip;&rdquo;</p>
-      <p class="is-size-7">Videos: MultiCamVideo dataset (Apache-2.0), <code>train/f35_aperture2.4/scene26</code>,
+      <p class="is-size-7">Numbered lines: the four segment prompts used for training. <i>Single prompt</i>: the
+        alternative one-prompt annotation (not used for training).<br>Videos: MultiCamVideo dataset (Apache-2.0), <code>train/f35_aperture2.4/scene26</code>,
         cameras 02, 04, 06, 09.</p>
     </div>
 
     <div class="has-text-centered download-block">
-      <a href="./data/camprompt_annotations_v1.zip" class="button is-medium is-rounded is-dark" download>
+      <a href="./data/camprompt_annotations.zip" class="button is-medium is-rounded is-dark" download>
         <span class="icon"><i class="fas fa-download"></i></span>
-        <span>Download annotations (ZIP, 16.5&nbsp;MB)</span>
+        <span>Download annotations (ZIP, 18.2&nbsp;MB)</span>
       </a>
       <a href="./data/README.html" class="button is-medium is-rounded is-light">
         <span class="icon"><i class="fas fa-file-alt"></i></span>
@@ -358,15 +369,17 @@
 <pre><code>import pandas as pd
 
 captions = pd.read_csv("captions.csv")
-prompts = pd.read_csv("camera_prompts.csv")
+prompts = pd.read_csv("camera_prompts_dense.csv")
 annotations = captions.merge(prompts, on="file_name")
+# optional, not used for training: one camera prompt per video
+single = pd.read_csv("camera_prompts_single.csv")
 # video: &lt;MultiCamVideo-Dataset root&gt;/&lt;file_name&gt;</code></pre>
       <p>
         <b>License.</b> The annotations are released under
         <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. The MultiCamVideo videos and camera
         data are not part of this release and remain under their original
         <a href="https://huggingface.co/datasets/KlingTeam/MultiCamVideo-Dataset">Apache-2.0 license</a>.
-        All annotations are machine-generated and may contain errors. If you use them, please also cite
+        All annotations are machine-generated with Gemini 2.5 Flash and may contain errors. If you use them, please also cite
         ReCamMaster.
       </p>
     </div>
